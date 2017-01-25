@@ -18,6 +18,7 @@
 @interface ViewController () < UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *moviesTableView;
 @property (strong, nonatomic) NSArray<MovieModel *> *movies;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 -(void) fetchMovies:(NSString *)url;
 
 @end
@@ -26,6 +27,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.moviesTableView addSubview:self.refreshControl]; //assumes tableView is @property
+
+    
     NSString *apiKey = @"a07e22bc18f5cb106bfe4cc1f83ad8ed";
     self.moviesTableView.dataSource = self;
     if ([self.restorationIdentifier isEqualToString:@"topRatedId"]) {
@@ -108,12 +114,18 @@
                 [models addObject:model];
             }
             self.movies = models;
-            [self.moviesTableView reloadData];
+            [self.moviesTableView reloadData];// reload tableView not that there is new Data
+            [self.refreshControl endRefreshing]; // Tell the refreshControl to stop spinning
            } else {
                NSLog(@"An error occurred: %@", error.description);
            }
         }];
     [task resume];
+}
+
+- (void)handleRefresh:(UIRefreshControl *)refreshControl {
+    [self.moviesTableView reloadData];
+    [self.refreshControl endRefreshing];
 }
 
 @end

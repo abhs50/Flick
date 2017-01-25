@@ -21,20 +21,35 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //Set Image
     self.movieImage.contentMode = UIViewContentModeScaleAspectFit;
     NSData *imageData = [NSData dataWithContentsOfURL:self.movie.posterURL];
     self.movieImage.image = [UIImage imageWithData:imageData];
     
+    self.scrollView.backgroundColor = [UIColor yellowColor];
+    self.cardView.backgroundColor = [UIColor blueColor];
+    
+    //Scroll View
+    CGFloat xMargin = 48;
+    CGFloat cardHeight = 200; // arbitrary value
+    CGFloat bottomPadding = 64;
+    CGFloat cardOffset = cardHeight * 0.75;
+    self.scrollView.frame = CGRectMake(xMargin, // x
+                                       CGRectGetHeight(self.view.bounds) - cardHeight - bottomPadding, // y
+                                       CGRectGetWidth(self.view.bounds) - 2 * xMargin, // width
+                                       cardHeight); // height
+    
+    self.cardView.frame = CGRectMake(0, cardOffset, CGRectGetWidth(self.scrollView.bounds), cardHeight);
+    // content height is the height of the card plus the offset we want
+    CGFloat contentHeight =  cardHeight + cardOffset;
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, contentHeight);
+    
+    // Set Name, Description
     self.movieNameLabel.text = self.movie.title;
     self.movieOverviewLabel.text = self.movie.movieDescription;
+    self.movieOverviewLabel.numberOfLines = 0;
     [self.movieOverviewLabel sizeToFit];
-    
-    CGFloat contentOffsetY = 180 + CGRectGetHeight(self.cardView.bounds);
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width,contentOffsetY);
-    self.scrollView.contentInset = UIEdgeInsetsMake(180, 0, 0, 0);
-    
-    
-    self.cardView.backgroundColor = [UIColor blueColor];
     
 }
 
