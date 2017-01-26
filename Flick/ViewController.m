@@ -30,6 +30,9 @@
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.moviesTableView addSubview:self.refreshControl]; //assumes tableView is @property
+    
+    //UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:@[@"One",@"Two"]];
+    //segmentControl.frame = CGRectMake(10, 50, 300, 30);
 
     
     NSString *apiKey = @"a07e22bc18f5cb106bfe4cc1f83ad8ed";

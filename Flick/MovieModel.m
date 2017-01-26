@@ -18,10 +18,9 @@
         self.movieDescription = dictionary[@"overview"];
         NSString *urlString = [NSString stringWithFormat:@"https://image.tmdb.org/t/p/original%@", dictionary[@"poster_path"]];
         self.posterURL = [NSURL URLWithString:urlString];
+        self.ratingValue = [[dictionary objectForKey:@"vote_average"] doubleValue];
     }
     return self;
 }
-
-
 
 @end

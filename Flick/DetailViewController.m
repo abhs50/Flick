@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *movieOverviewLabel;
 @property (weak, nonatomic) IBOutlet UIView *cardView;
+@property (weak, nonatomic) IBOutlet UILabel *ratingLabel;
 
 @end
 
@@ -27,13 +28,13 @@
     NSData *imageData = [NSData dataWithContentsOfURL:self.movie.posterURL];
     self.movieImage.image = [UIImage imageWithData:imageData];
     
-    self.scrollView.backgroundColor = [UIColor yellowColor];
-    self.cardView.backgroundColor = [UIColor blueColor];
+   // self.scrollView.backgroundColor = [UIColor yellowColor];
+    //self.cardView.backgroundColor = [UIColor blueColor];
     
     //Scroll View
     CGFloat xMargin = 48;
     CGFloat cardHeight = 200; // arbitrary value
-    CGFloat bottomPadding = 64;
+    CGFloat bottomPadding = 84;
     CGFloat cardOffset = cardHeight * 0.75;
     self.scrollView.frame = CGRectMake(xMargin, // x
                                        CGRectGetHeight(self.view.bounds) - cardHeight - bottomPadding, // y
@@ -48,6 +49,11 @@
     // Set Name, Description
     self.movieNameLabel.text = self.movie.title;
     self.movieOverviewLabel.text = self.movie.movieDescription;
+    self.ratingLabel.text = [NSString stringWithFormat:@"%0.1f", self.movie.ratingValue];
+    
+    self.movieNameLabel.numberOfLines = 0;
+    [self.movieNameLabel sizeToFit];
+    
     self.movieOverviewLabel.numberOfLines = 0;
     [self.movieOverviewLabel sizeToFit];
     

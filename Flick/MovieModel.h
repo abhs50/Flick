@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *movieDescription;
 @property (nonatomic, strong) NSURL *posterURL;
+@property float ratingValue;
 
 @end
