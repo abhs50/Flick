@@ -31,8 +31,13 @@
     [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.moviesTableView addSubview:self.refreshControl]; //assumes tableView is @property
     
-    //UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:@[@"One",@"Two"]];
-    //segmentControl.frame = CGRectMake(10, 50, 300, 30);
+    UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:@[@"One",@"Two"]];
+    segmentControl.frame = CGRectMake(300, 90, 100, 30);
+    
+    [segmentControl addTarget:self action:@selector(segmentedControlValueDidChange:) forControlEvents:UIControlEventValueChanged];
+    [segmentControl setSelectedSegmentIndex:0];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
+    self.navigationItem.rightBarButtonItem = item;
 
     
     NSString *apiKey = @"a07e22bc18f5cb106bfe4cc1f83ad8ed";
@@ -129,6 +134,18 @@
 - (void)handleRefresh:(UIRefreshControl *)refreshControl {
     [self.moviesTableView reloadData];
     [self.refreshControl endRefreshing];
+}
+
+-(void)segmentedControlValueDidChange:(UISegmentedControl *)segment
+{
+    switch (segment.selectedSegmentIndex) {
+        case 0:{
+            //action for the first button (Current)
+            break;}
+        case 1:{
+            //action for the first button (Current)
+            break;}
+    }
 }
 
 @end
