@@ -7,6 +7,7 @@
 //
 
 #import "DetailViewController.h"
+#import "ZoomViewController.h"
 
 @interface DetailViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *movieNameLabel;
@@ -19,7 +20,6 @@
 @end
 
 @implementation DetailViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -59,19 +59,21 @@
     
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
+//In a storyboard-based application, you will often want to do a little preparation before navigation
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)didTap:(UITapGestureRecognizer *)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    ZoomViewController *zoomVc = [storyboard instantiateViewControllerWithIdentifier:@"zoomVc"];
+    zoomVc.image = self.movieImage.image;
+    [self.navigationController pushViewController:zoomVc animated:YES];
+    
+    
 }
-*/
 
 @end

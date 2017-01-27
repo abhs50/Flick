@@ -21,6 +21,11 @@
 		7918D9231E37E3750004D87C /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7918D9221E37E3750004D87C /* DetailViewController.m */; };
 		7918D9251E395F2B0004D87C /* releaseDate.png in Resources */ = {isa = PBXBuildFile; fileRef = 7918D9241E395F2B0004D87C /* releaseDate.png */; };
 		7918D9271E395FC80004D87C /* rating.png in Resources */ = {isa = PBXBuildFile; fileRef = 7918D9261E395FC80004D87C /* rating.png */; };
+		7918D92A1E39A5B80004D87C /* MovieCellUICollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7918D9291E39A5B80004D87C /* MovieCellUICollectionView.m */; };
+		7918D9311E3A87620004D87C /* segment_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7918D92F1E3A87620004D87C /* segment_1.png */; };
+		7918D9321E3A87620004D87C /* segment_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7918D9301E3A87620004D87C /* segment_2.png */; };
+		7918D9351E3A8DA00004D87C /* ZoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7918D9341E3A8DA00004D87C /* ZoomViewController.m */; };
+		7918D9371E3AEB430004D87C /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7918D9361E3AEB430004D87C /* background.jpg */; };
 		7989EA021E36B5C300DB3A94 /* popcorn.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7989EA011E36B5C300DB3A94 /* popcorn.jpg */; };
 		7989EA051E36C1A800DB3A94 /* MovieModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7989EA041E36C1A800DB3A94 /* MovieModel.m */; };
 		79B490E31E36992F0056D704 /* MovieCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B490E21E36992F0056D704 /* MovieCellTableViewCell.m */; };
@@ -57,6 +62,13 @@
 		7918D9221E37E3750004D87C /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		7918D9241E395F2B0004D87C /* releaseDate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = releaseDate.png; path = ../../../Downloads/releaseDate.png; sourceTree = "<group>"; };
 		7918D9261E395FC80004D87C /* rating.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rating.png; path = ../../../Downloads/rating.png; sourceTree = "<group>"; };
+		7918D9281E39A5B80004D87C /* MovieCellUICollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCellUICollectionView.h; sourceTree = "<group>"; };
+		7918D9291E39A5B80004D87C /* MovieCellUICollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCellUICollectionView.m; sourceTree = "<group>"; };
+		7918D92F1E3A87620004D87C /* segment_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_1.png; path = ../../../Downloads/segment_1.png; sourceTree = "<group>"; };
+		7918D9301E3A87620004D87C /* segment_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_2.png; path = ../../../Downloads/segment_2.png; sourceTree = "<group>"; };
+		7918D9331E3A8DA00004D87C /* ZoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomViewController.h; sourceTree = "<group>"; };
+		7918D9341E3A8DA00004D87C /* ZoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomViewController.m; sourceTree = "<group>"; };
+		7918D9361E3AEB430004D87C /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = background.jpg; path = ../../../Downloads/background.jpg; sourceTree = "<group>"; };
 		7989EA011E36B5C300DB3A94 /* popcorn.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = popcorn.jpg; path = ../../../Desktop/popcorn.jpg; sourceTree = "<group>"; };
 		7989EA031E36C1A800DB3A94 /* MovieModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieModel.h; sourceTree = "<group>"; };
 		7989EA041E36C1A800DB3A94 /* MovieModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieModel.m; sourceTree = "<group>"; };
@@ -121,6 +133,9 @@
 		7918B36D1E3683B5009F2442 /* Flick */ = {
 			isa = PBXGroup;
 			children = (
+				7918D9361E3AEB430004D87C /* background.jpg */,
+				7918D92F1E3A87620004D87C /* segment_1.png */,
+				7918D9301E3A87620004D87C /* segment_2.png */,
 				7918D9261E395FC80004D87C /* rating.png */,
 				7918D91D1E37E2040004D87C /* 1485307588_arrow-up-70px.png */,
 				7918D9241E395F2B0004D87C /* releaseDate.png */,
@@ -132,7 +147,11 @@
 				7918B3751E3683B5009F2442 /* ViewController.h */,
 				7918B3761E3683B5009F2442 /* ViewController.m */,
 				7918B3781E3683B5009F2442 /* Main.storyboard */,
+				7918D9331E3A8DA00004D87C /* ZoomViewController.h */,
+				7918D9341E3A8DA00004D87C /* ZoomViewController.m */,
 				79B490E11E36992F0056D704 /* MovieCellTableViewCell.h */,
+				7918D9281E39A5B80004D87C /* MovieCellUICollectionView.h */,
+				7918D9291E39A5B80004D87C /* MovieCellUICollectionView.m */,
 				79B490E21E36992F0056D704 /* MovieCellTableViewCell.m */,
 				7918B37B1E3683B5009F2442 /* Images.xcassets */,
 				7989EA011E36B5C300DB3A94 /* popcorn.jpg */,
@@ -269,11 +288,14 @@
 			files = (
 				7918B37A1E3683B5009F2442 /* Main.storyboard in Resources */,
 				7918B37F1E3683B5009F2442 /* LaunchScreen.xib in Resources */,
+				7918D9311E3A87620004D87C /* segment_1.png in Resources */,
 				7918D9271E395FC80004D87C /* rating.png in Resources */,
 				7918D9251E395F2B0004D87C /* releaseDate.png in Resources */,
 				7918D9201E37E2340004D87C /* 1485307657_icon-play.png in Resources */,
 				7918B37C1E3683B5009F2442 /* Images.xcassets in Resources */,
 				7989EA021E36B5C300DB3A94 /* popcorn.jpg in Resources */,
+				7918D9321E3A87620004D87C /* segment_2.png in Resources */,
+				7918D9371E3AEB430004D87C /* background.jpg in Resources */,
 				7918D91E1E37E2040004D87C /* 1485307588_arrow-up-70px.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +410,9 @@
 				7918B3771E3683B5009F2442 /* ViewController.m in Sources */,
 				7918B3741E3683B5009F2442 /* AppDelegate.m in Sources */,
 				79B490E31E36992F0056D704 /* MovieCellTableViewCell.m in Sources */,
+				7918D9351E3A8DA00004D87C /* ZoomViewController.m in Sources */,
 				7989EA051E36C1A800DB3A94 /* MovieModel.m in Sources */,
+				7918D92A1E39A5B80004D87C /* MovieCellUICollectionView.m in Sources */,
 				7918B3711E3683B5009F2442 /* main.m in Sources */,
 				7918D9231E37E3750004D87C /* DetailViewController.m in Sources */,
 			);

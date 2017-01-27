@@ -12,6 +12,7 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "DetailViewController.h"
 #import "MBProgressHUD.h"
+#import "MovieCellUICollectionView.h"
 
 
 
@@ -19,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UITableView *moviesTableView;
 @property (strong, nonatomic) NSArray<MovieModel *> *movies;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
+@property (nonatomic, strong) UICollectionView *collectionView;
+
 -(void) fetchMovies:(NSString *)url;
 
 @end
@@ -26,20 +29,41 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor lightGrayColor];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.moviesTableView addSubview:self.refreshControl]; //assumes tableView is @property
     
-    UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:@[@"One",@"Two"]];
-    segmentControl.frame = CGRectMake(300, 90, 100, 30);
+    // Segmented View
+    NSArray *itemArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"segment_1.png"],[UIImage imageNamed:@"segment_2.png"],nil];
     
+    UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:itemArray];
+    segmentControl.frame = CGRectMake(300, 90, 100, 30);
     [segmentControl addTarget:self action:@selector(segmentedControlValueDidChange:) forControlEvents:UIControlEventValueChanged];
     [segmentControl setSelectedSegmentIndex:0];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
     self.navigationItem.rightBarButtonItem = item;
-
     
+    // Collection View
+    UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
+    CGFloat screenWidth = CGRectGetHeight(self.view.bounds);
+    CGFloat itemHT = 160;
+    CGFloat itemWidth = screenWidth / 3;
+    layout.itemSize = CGSizeMake(itemWidth, itemHT);
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    layout.minimumInteritemSpacing = 0;
+    
+    _collectionView=[[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+    [_collectionView setContentInset:UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, 0, 0)];
+    [_collectionView setDataSource:self];
+    [_collectionView setDelegate:self];
+    [_collectionView registerClass:[MovieCellUICollectionView class] forCellWithReuseIdentifier:@"MovieCellUICollection"];
+    self.collectionView.backgroundColor = [UIColor lightGrayColor];
+    
+    
+    // Network Call Setup
     NSString *apiKey = @"a07e22bc18f5cb106bfe4cc1f83ad8ed";
     self.moviesTableView.dataSource = self;
     if ([self.restorationIdentifier isEqualToString:@"topRatedId"]) {
@@ -59,11 +83,62 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma CollectionView
 
--(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     return self.movies.count;
 }
 
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString * const kCellIdentifier = @"MovieCellUICollection";
+    MovieCellUICollectionView *cell=[collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
+    MovieModel *model = [self.movies objectAtIndex:indexPath.row];
+    UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [image setImageWithURL:model.posterURL];
+    [cell addSubview:image];
+    return cell;
+}
+
+// Collection Implementation helper
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(122, 121);
+}
+
+// Collection Implementation helper
+- (UIEdgeInsets)collectionView:
+(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    return UIEdgeInsetsMake(0, 0, 0, 0);
+}
+
+
+// CollectionView push to Detail View Controller
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    DetailViewController *detailVC = [storyboard instantiateViewControllerWithIdentifier:@"DetailVC"];
+    detailVC.movie = [self.movies objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:detailVC animated:NO];
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    return YES;
+}
+
+#pragma Table View
+
+// Table Implementation helper
+-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.movies.count;
+}
+// Table Implementation
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString * const kCellIdentifier = @"MovieTableViewCell";
@@ -76,10 +151,13 @@
     return cell;
 }
 
+
+#pragma Details Screen
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     NSLog(@"I am calling the detailViewController");
     DetailViewController *detailView = segue.destinationViewController;
-    
     MovieCellTableViewCell *cell = sender;
     NSIndexPath *selectedIndexPath = [self.moviesTableView indexPathForCell:cell];
     MovieModel *movieModel = self.movies[selectedIndexPath.row];
@@ -87,8 +165,9 @@
 }
 
 
--(void) fetchMovies: (NSString*) urlString {
+#pragma Network Call
 
+-(void) fetchMovies: (NSString*) urlString {
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
@@ -131,20 +210,31 @@
     [task resume];
 }
 
+#pragma Refresh Control
+
 - (void)handleRefresh:(UIRefreshControl *)refreshControl {
     [self.moviesTableView reloadData];
     [self.refreshControl endRefreshing];
 }
 
+# pragma Segmented Control
+
 -(void)segmentedControlValueDidChange:(UISegmentedControl *)segment
 {
     switch (segment.selectedSegmentIndex) {
         case 0:{
-            //action for the first button (Current)
-            break;}
+            NSLog(@"I am in Segment 0");
+            [self.moviesTableView setHidden:NO];
+            [self.collectionView setHidden:YES];
+            break;
+        }
         case 1:{
-            //action for the first button (Current)
-            break;}
+             NSLog(@"I am in Segment 1");
+            [self.moviesTableView setHidden:YES];
+            [self.view addSubview:_collectionView];
+            [self.collectionView setHidden:NO];
+            break;
+        }
     }
 }
 
