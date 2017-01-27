@@ -1,6 +1,5 @@
 # Flick
 Ios App to look at latest and Top Rated Movies currently playing.
-
 GIF For App : 
 http://recordit.co/D2KJ1ikj2N
 
