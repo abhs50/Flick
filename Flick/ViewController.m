@@ -21,6 +21,8 @@
 @property (strong, nonatomic) NSArray<MovieModel *> *movies;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong) NSMutableArray *searchResults;
 
 -(void) fetchMovies:(NSString *)url;
 
@@ -31,7 +33,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.view.backgroundColor = [UIColor colorWithRed:116.0/255.0f green:125.0/255.0f blue:125.0/255.0f alpha:1.0];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.moviesTableView addSubview:self.refreshControl]; //assumes tableView is @property
@@ -60,8 +62,7 @@
     [_collectionView setDataSource:self];
     [_collectionView setDelegate:self];
     [_collectionView registerClass:[MovieCellUICollectionView class] forCellWithReuseIdentifier:@"MovieCellUICollection"];
-    self.collectionView.backgroundColor = [UIColor lightGrayColor];
-    
+    self.collectionView.backgroundColor = [UIColor colorWithRed:116.0/255.0f green:125.0/255.0f blue:125.0/255.0f alpha:1.0];
     
     // Network Call Setup
     NSString *apiKey = @"a07e22bc18f5cb106bfe4cc1f83ad8ed";
@@ -75,6 +76,15 @@
         NSString *urlString = [@"https://api.themoviedb.org/3/movie/now_playing?api_key=" stringByAppendingString:apiKey];
         [self fetchMovies:urlString];
     }
+    
+    self.searchResults = [NSMutableArray arrayWithCapacity:[self.movies count]];
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.hidesNavigationBarDuringPresentation = NO;
+    self.moviesTableView.tableHeaderView = self.searchController.searchBar;
+    self.searchController.searchBar.delegate = self;
+    self.definesPresentationContext = YES;
 
 }
 
@@ -82,6 +92,57 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma SEARCH
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
+    NSString *scope = nil;
+    //NSInteger selectedScopeButtonIndex = [self.searchController.searchBar selectedScopeButtonIndex];
+    [self updateFilteredContentForMovie:searchString type:scope];
+    [self.moviesTableView reloadData];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    [self updateSearchResultsForSearchController:self.searchController];
+}
+
+- (void)updateFilteredContentForMovie:(NSString *)movieName type:(NSString *)typeName {
+    
+    // Update the filtered array based on the search text and scope.
+    if ((movieName == nil) || [movieName length] == 0) {
+        // If there is no search string and the scope is "All".
+        if (typeName == nil) {
+            self.searchResults = [self.movies mutableCopy];
+        } else {
+            // If there is no search string and the scope is chosen.
+            NSMutableArray *searchResults = [[NSMutableArray alloc] init];
+            for (MovieModel *movie in self.movies) {
+                if ([movie.title isEqualToString:typeName]) {
+                    [searchResults addObject:movie];
+                }
+            }
+            self.searchResults = searchResults;
+        }
+        return;
+    }
+    
+    [self.searchResults removeAllObjects]; // First clear the filtered array.
+    for (MovieModel *movie in self.movies) {
+        if (typeName == nil) {
+            NSUInteger searchOptions = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
+            NSRange movieNameRange = NSMakeRange(0, movie.title.length);
+            NSRange foundRange = [movie.title rangeOfString:movieName options:searchOptions range:movieNameRange];
+            if (foundRange.length > 0) {
+                [self.searchResults addObject:movie];
+            }
+        }
+    }
+    
+}
+
 
 #pragma CollectionView
 
@@ -136,18 +197,29 @@
 
 // Table Implementation helper
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.movies.count;
+    if (self.searchController.active) {
+        return [self.searchResults count];
+    } else {
+        return [self.movies count];
+    }
 }
 // Table Implementation
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString * const kCellIdentifier = @"MovieTableViewCell";
     MovieCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
-    MovieModel *model = [self.movies objectAtIndex:indexPath.row];
-    cell.movieName.text = model.title;
-    cell.textView.text = model.movieDescription;
+    MovieModel *movie;
+    
+    if (self.searchController.active) {
+        movie = [self.searchResults objectAtIndex:indexPath.row];
+    } else {
+        movie = [self.movies objectAtIndex:indexPath.row];
+    }
+    
+    cell.movieName.text = movie.title;
+    cell.textView.text = movie.movieDescription;
     cell.posterView.contentMode = UIViewContentModeScaleAspectFit;
-    [cell.posterView setImageWithURL:model.posterURL];
+    [cell.posterView setImageWithURL:movie.posterURL];
     return cell;
 }
 
@@ -157,10 +229,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     NSLog(@"I am calling the detailViewController");
+    NSArray *sourceArray = self.searchController.active ? self.searchResults : self.movies;
     DetailViewController *detailView = segue.destinationViewController;
     MovieCellTableViewCell *cell = sender;
     NSIndexPath *selectedIndexPath = [self.moviesTableView indexPathForCell:cell];
-    MovieModel *movieModel = self.movies[selectedIndexPath.row];
+    MovieModel *movieModel = sourceArray[selectedIndexPath.row];
     detailView.movie = movieModel;
 }
 
